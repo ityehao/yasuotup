@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+    <script>
+    var arr="asdf.jpg";
+    console.log(arr.lastIndexOf(".")+1);
+
+    	function uploadImg(_this) {
+	  	var fileName = _this.value;//文件名
+		var extension = new String(fileName.substring(fileName.lastIndexOf('.')+1,fileName.length)).toLowerCase();//文件拓展名
+		if (extension == 'jpg'||extension == 'jpeg'||extension == 'png'||extension == 'gif'||extension == 'bmp'){
+		    //压缩图片
+		    lrz(_this.files[0], {
+		        width: 480,//图片宽度
+		        quality: 0.9 //图片质量
+		    },
+		    function(rst) {
+		        var show_img = new Image();
+		        show_img.src = rst.base64; //加密图片流
+		        _this.src = show_img.src; //将图片流赋值给input的src
+		        $("#form1").ajaxSubmit({
+		            type: "post",
+		            dataType: "json",
+		            data: {
+		                'fileStream': _this.src //将base64加密的图片流上传到服务器
+		            },
+		            success: function(data) {
+		                if (data == "error") {
+		                    jAlert("上传失败！", "提示");
+		                } else {
+		                    $("#ddyyImg").attr("src", data);
+		                    $("#imgPath").val(data);
+		                }
+		            }
+		        });
+		    });
+		}else{
+			jAlert("文件格式不正确！", "提示");
+	  	}
+	}
+
+    					
+
+    </script>
+    <input type="file" accept="image/*" id="imageurl" name="imageurl" onchange="uploadImg(this);"/>
+    </body>
+</html>
